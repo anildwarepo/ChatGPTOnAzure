@@ -1,0 +1,165 @@
+.navbar-bg {
+
+    background-color:rgba(0,0, 0, 0.80); 
+    color:crimson;
+}
+.chatbottompos
+{
+    bottom:2%;
+    position: fixed;
+    width: 70%;
+}
+
+.user-message {
+
+    margin-bottom: 20px;
+}
+
+.chatarea{
+
+    border:1px;
+    border-style: solid;
+    border-color:rgba(0,0, 0, 0.50); 
+    padding:15px;
+    background-color: rgba(0,0, 0, 0.50); 
+    color:white;
+}
+
+
+.chatbg{
+
+    background-color:  rgba(0,0, 0, 0.851); 
+    
+}
+
+
+.chathistory{
+
+    background-color:  rgba(0,0, 0, 0.90); 
+    color: white;
+    white-space: pre;
+}
+
+.chattextbox{
+    background-color:  rgba(0,0, 0, 0.90); 
+    color: white;
+}
+
+.chattextbox:focus{
+    background-color:  rgb(2, 14, 26); 
+    color: white;
+}
+
+.chatsendbutton{
+    margin-bottom: 30px;
+}
+
+.chatsend{
+    background-color:  transparent; 
+    border-color: rgba(116, 167, 218, 0.877);
+    border:0px;
+}
+
+.chatsend:hover {
+    background-color:  transparent; 
+    border-color: rgba(116, 167, 218, 0.877);
+}
+
+.chatsend::after {
+    background-color:  transparent; 
+    border-color: rgba(116, 167, 218, 0.877);
+}
+
+textarea {
+    resize: none;
+    border-style: none; 
+    border-color: Transparent; 
+}
+
+ul {
+
+    display:flex;
+    flex-direction: column;
+    
+    list-style-type: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow:auto;
+    max-height: 900px;
+}
+  
+ul li{
+    display:flex;
+    
+    margin-bottom:20px;
+    border: 2px;
+}
+
+.chat-item-right{
+
+    width:fit-content;
+    align-self: flex-end;
+    max-width: 70%;
+    
+    flex-direction: row-reverse;
+}
+
+.chat-item-left{
+    max-width: 70%;
+    align-self: flex-start;
+    
+    flex-direction: row;
+}
+
+.chat-item-message-user {
+    background-color: rgb(11, 12, 12);
+    color: white;
+    text-align: left;
+    border-radius: 10px;
+    padding:10px;
+}
+
+.chat-item-message-bot {
+    background-color: rgb(37, 196, 196);
+    text-align: left;
+    border-radius: 10px;
+    padding:10px;
+}
+
+
+.icon {
+
+    padding: 10px;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 30px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #131212, #131212);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #a09c9c;
+  }
+  
+  ::-webkit-scrollbar-corner {
+    background-color: #f5f5f5;
+  }
+  
+  /* Microsoft Edge */
+::-ms-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: #f5f5f5;
+  }
+  
+  ::-ms-thumb {
+    background-color: #ccc;
+    border-radius: 5px;
+  }
