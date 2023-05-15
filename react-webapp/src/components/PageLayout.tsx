@@ -6,15 +6,17 @@ import { SignInButton } from "./SignInButton";
 import { SignOutButton } from "./SignOutButton";
 import Landing from "./Landing";
 import { ChatGPTUI } from "./ChatGPTUI";
-import { TestComponent } from "./testcomponent";
-
+import { user_impersonation_scope } from "../authConfig";
 
 import "../styles/pagelayout.css";
 
 
+
 export const PageLayout = (props: any) => {
     const isAuthenticated = useIsAuthenticated();
-    const { accounts } = useMsal();
+    const { instance, accounts } = useMsal();
+    
+
     return (
         <>
            <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
@@ -32,7 +34,7 @@ export const PageLayout = (props: any) => {
                     <TestComponent accounts={accounts}/> 
                     <ChatGPTUI accounts={accounts}/>
                 */}
-                <ChatGPTUI accounts={accounts}/>
+                <ChatGPTUI accounts={accounts} instance={instance}/>
                    
             </AuthenticatedTemplate>
 

@@ -1,0 +1,20 @@
+{
+    "api": {
+        "acceptMappedClaims": null,
+        "knownClientApplications": [],
+        "oauth2PermissionScopes": [
+        {
+            "adminConsentDescription": "User Impersonation",
+            "adminConsentDisplayName": "User Impersonation",
+            "id": "new-guid",
+            "isEnabled": true,
+            "type": "User",
+            "userConsentDescription": null,
+            "userConsentDisplayName": null,
+            "value": "user_impersonation"
+        }
+        ],
+        "preAuthorizedApplications": [],
+        "requestedAccessTokenVersion": 2
+    }
+}

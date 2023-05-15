@@ -12,17 +12,18 @@ import Form from 'react-bootstrap/Form';
 import { Prompt, Chat, ChatAPIRequest, GptPrompt } from '../services/interfaces/iprompt';
 
 export const ChatGPTUI = (props: any) => {
+
     const [maxTokens , setMaxTokens] = useState(200);
-  const [temperature , setTemperature] = useState(0.5);
-  const [includeChatHistory , setIncludeChatHistory] = useState(false);
-  const [systemMessage , setSystemMessage] = useState('You are an Open AI assistant.');
-  const [chatHistoryCount , setChatHistoryCount] = useState(10);
-  const divRef = useRef<null | HTMLDivElement>(null); 
-  const [chatHistory, setChatHistory] = useState<Chat[]>([]); //{userType: "user", conversationId: 0, userMessage: `Welcome, ${props.accounts[0].name}!`}
-  const [prevChatHistory, setPrevChatHistory] = useState<Chat[]>([]);
-  const [userQuery, setUserQuery] = useState('');
-  const [usage , setUsage] = useState({completion_tokens:0, prompt_tokens: 0, total_tokens:0});
-  const [isSending, setIsSending] = useState(false);
+    const [temperature , setTemperature] = useState(0.5);
+    const [includeChatHistory , setIncludeChatHistory] = useState(false);
+    const [systemMessage , setSystemMessage] = useState('You are an Open AI assistant.');
+    const [chatHistoryCount , setChatHistoryCount] = useState(10);
+    const divRef = useRef<null | HTMLDivElement>(null); 
+    const [chatHistory, setChatHistory] = useState<Chat[]>([]); //{userType: "user", conversationId: 0, userMessage: `Welcome, ${props.accounts[0].name}!`}
+    const [prevChatHistory, setPrevChatHistory] = useState<Chat[]>([]);
+    const [userQuery, setUserQuery] = useState('');
+    const [usage , setUsage] = useState({completion_tokens:0, prompt_tokens: 0, total_tokens:0});
+    const [isSending, setIsSending] = useState(false);
 
 
   const [chatAPIRequest, setParameters] = useState<ChatAPIRequest>({
@@ -110,8 +111,8 @@ export const ChatGPTUI = (props: any) => {
     const userItem = {userType: "user", userMessage: userQuery};
     const userItems = [...chatHistory, userItem];
     setChatHistory(userItems);
-    sendChatMessage(chatAPIRequest).then((response) => {
-        console.log(response);
+    sendChatMessage(chatAPIRequest, props).then((response) => {
+        //console.log(response);
         const botItem = {userType: "system", userMessage: response.response.llm_response};
         const botItems = [...userItems, botItem];
         setChatHistory(botItems);

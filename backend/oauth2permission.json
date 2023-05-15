@@ -1,0 +1,11 @@
+{
+"adminConsentDescription": "User Impersonation",
+"adminConsentDisplayName": "User Impersonation",
+"id": "new-guid",
+"isEnabled": true,
+"type": "User",
+"userConsentDescription": null,
+"userConsentDisplayName": null,
+"value": "user_impersonation"
+}
+    

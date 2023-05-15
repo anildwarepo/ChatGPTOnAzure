@@ -4,6 +4,7 @@
  */
 
 import { LogLevel } from "@azure/msal-browser";
+import config from "./config.json";
 
 /**
  * Configuration object to be passed to MSAL instance on creation. 
@@ -12,11 +13,11 @@ import { LogLevel } from "@azure/msal-browser";
  */
 export const msalConfig = {
     
-  
+    
     
     auth: {
-        clientId: "711152ff-c26e-4d66-832c-655cf9b805e0",
-        authority: "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47",
+        clientId: config.CLIENT_ID, //"a9495c0c-3b89-4b77-aee4-7cc022380f12",
+        authority: `https://login.microsoftonline.com/${config.TENANT_ID}`,  //"https://login.microsoftonline.com/7f1290b4-3c39-4277-a63e-c577680a12cf", //,
         redirectUri: window.location.href //"http://localhost:3000"
     },
     cache: {
@@ -60,13 +61,11 @@ export const loginRequest = {
     scopes: ["User.Read"]
 };
 
-export const irRequest = {
-    scopes: ["https://anildwair-anildwairendpoint1.mir.prod.reco.microsoft.com/user_impersonation"]
+
+export const user_impersonation_scope = {
+    scopes: [config.USER_IMPERSONATIION_SCOPE] //["api://5924b827-87cb-4029-9c51-4481fd427fd5/user_impersonation"]
 };
 
-export const cogSvcRequest = {
-    scopes: ["https://cognitiveservices.azure.com/.default"]
-};
 
 /**
  * Add here the scopes to request when obtaining an access token for MS Graph API. For more information, see:
