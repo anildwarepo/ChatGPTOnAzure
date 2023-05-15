@@ -16,6 +16,7 @@ To deploy this web app and azure functions using a single cli command:
 - Azure Cosmos DB Account, database name "logging-db" and collection "openai-logs" created. If a different db and collections are used, the function app needs to be modified and redeployed. 
 - Deployment user needs to have Azure Active Directory Service Principal create permissions and grant admin consent to API permissions.
 - Azure Resource Group creation and contributor permissions.
+- npm react-script package installed.
 
 
 

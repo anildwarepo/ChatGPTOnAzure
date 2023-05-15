@@ -307,6 +307,7 @@ cat << EOF > src/config.json
 }
 EOF
 
+npm install
 npm run build
 
 az storage blob service-properties update --account-name $FUNC_STORAGE --static-website --404-document 404.html --index-document index.html
