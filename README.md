@@ -30,6 +30,7 @@ To deploy the web app, run the below commands in bash CLI as shown.
 
     cd ChatGPTOnAzure
 
+    chmod +x deploy.sh
     ./deploy.sh <resource-group-name>  <region>  <Azure Open AI Endpoint> <Azure Open AI Key> <Azure Open AI Model Deployment Name> <funcapp_name>  <Azure Cosmos DB Connection String>
 
     For e.g
