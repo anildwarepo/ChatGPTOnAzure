@@ -175,10 +175,12 @@ else
     az cosmosdb sql database create --account-name $Azure_CosmosDB_Account --name "logging-db" --resource-group $RESOURCE_GROUP
     #create container
     az cosmosdb sql container create --account-name $Azure_CosmosDB_Account --database-name "logging-db" --name "openai-logs" --partition-key-path "/userInfo/email" --resource-group $RESOURCE_GROUP
-    #get cosmos db connection string
-    Azure_CosmosDB_ConnectionString=$(az cosmosdb keys list --name $Azure_CosmosDB_Account --resource-group $RESOURCE_GROUP --type connection-strings | jq -r .connectionStrings[0].connectionString)
-
+    
+    
 fi
+
+#get cosmos db connection string
+Azure_CosmosDB_ConnectionString=$(az cosmosdb keys list --name $Azure_CosmosDB_Account --resource-group $RESOURCE_GROUP --type connection-strings | jq -r .connectionStrings[0].connectionString)
 
 
 if [ $? -ne 0 ]
