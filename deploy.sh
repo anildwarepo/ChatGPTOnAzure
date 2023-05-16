@@ -11,8 +11,8 @@
 
 printf "This can be run from Azure Cloud Shell\n \
 This script provisions Azure Resources such as\n \
-Azure Function App and Azure Storage with static website enabled.\n\
-\nIt also deploys Azure Function App Code and confiures the App Settings to use the provided Open AI Endpoint and Open AI Key.\n"
+Azure Function App, Azure Cosmos DB with serverless and Azure Storage with static website enabled.\n\
+It also deploys Azure Function App Code and confiures the App Settings to use the provided Open AI Endpoint and Open AI Key.\n"
 read -p "Press enter to continue...."
 
 
@@ -23,7 +23,8 @@ OPENAI_KEY=$4
 OPENAI_DEPLOYMENT_NAME=$5
 FUNC_NAME=$6
 FUNC_STORAGE=$7
-Azure_CosmosDB_ConnectionString=$8
+Azure_CosmosDB_Account=$8
+Azure_CosmosDB_ConnectionString=""
 
 
 
@@ -71,11 +72,13 @@ do
     fi
 done
 
-while [ -z "${Azure_CosmosDB_ConnectionString}" ]
+while [ -z "${Azure_CosmosDB_Account}" ]
 do
-    echo "Please provide Azure Cosmos DB Connection String:"
-    read Azure_CosmosDB_ConnectionString
+    echo "Please provide a name for the Azure Cosmos DB Account:"
+    read Azure_CosmosDB_Account
 done
+
+
 
 
 
@@ -154,6 +157,33 @@ fi
 if [ $? -ne 0 ]
 then
     printf "\nError creating storage account. Exiting...\n"
+    exit 1
+fi
+
+
+#create azure cosmos db account
+cosmosdb_name=$(az resource list -g $RESOURCE_GROUP | jq -r --arg Azure_CosmosDB_Account $Azure_CosmosDB_Account '.[] | select(.type == "Microsoft.DocumentDB/databaseAccounts") | select(.name = $Azure_CosmosDB_Account) | .name')
+
+#check if cosmos db account exists
+if [[ $cosmosdb_name = $Azure_CosmosDB_Account ]]
+then
+    printf "\nCosmos DB Account $cosmosdb_name already exists.\n"
+else
+    printf "\nCreating Cosmos DB Account - $Azure_CosmosDB_Account...\n"
+    az cosmosdb create --name $Azure_CosmosDB_Account --resource-group $RESOURCE_GROUP --kind GlobalDocumentDB --locations regionName=$REGION failoverPriority=0 isZoneRedundant=False --capabilities EnableServerless
+    #create database
+    az cosmosdb sql database create --account-name $Azure_CosmosDB_Account --name "logging-db" --resource-group $RESOURCE_GROUP
+    #create container
+    az cosmosdb sql container create --account-name $Azure_CosmosDB_Account --database-name "logging-db" --name "openai-logs" --partition-key-path "/userInfo/email" --resource-group $RESOURCE_GROUP
+    #get cosmos db connection string
+    Azure_CosmosDB_ConnectionString=$(az cosmosdb keys list --name $Azure_CosmosDB_Account --resource-group $RESOURCE_GROUP --type connection-strings | jq -r .connectionStrings[0].connectionString)
+
+fi
+
+
+if [ $? -ne 0 ]
+then
+    printf "\nError creating cosmosdb account. Exiting...\n"
     exit 1
 fi
 

@@ -1,6 +1,6 @@
 {
     "TENANT_ID": "7f1290b4-3c39-4277-a63e-c577680a12cf",
-    "CLIENT_ID": "1e3c7b37-fcd8-4496-9eed-7aef8566687e",
-    "USER_IMPERSONATIION_SCOPE": "api://9ba9be36-171a-4f63-a505-96bedf42c609/user_impersonation",
-    "CHAT_API_ENDPOINT": "https://funcchatapifantafunc589.azurewebsites.net/api/openai"
+    "CLIENT_ID": "18c7be07-67cc-45d3-a09f-ee499e871069",
+    "USER_IMPERSONATIION_SCOPE": "api://d100dac4-8982-4b39-a566-461ba07c0226/user_impersonation",
+    "CHAT_API_ENDPOINT": "https://funcchatapidiscofunc34.azurewebsites.net/api/openai"
 }

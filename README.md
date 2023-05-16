@@ -13,7 +13,6 @@ To deploy this web app and azure functions using a single cli command:
 - Azure Functions Core tools installed.
 - bash with jq installed. Azure Cloud shell can be used. 
 - Azure Open AI resource created and ChatGPT turbo model deployed. 
-- Azure Cosmos DB Account, database name "logging-db" and collection "openai-logs" created. If a different db and collections are used, the function app needs to be modified and redeployed. 
 - Deployment user needs to have Azure Active Directory Service Principal create permissions and grant admin consent to API permissions.
 - Azure Resource Group creation and contributor permissions.
 - npm react-script package installed.
@@ -32,10 +31,10 @@ To deploy the web app, run the below commands in bash CLI as shown.
     cd ChatGPTOnAzure
 
     chmod +x deploy.sh
-    ./deploy.sh <resource-group-name>  <region>  <Azure Open AI Endpoint> <Azure Open AI Key> <Azure Open AI Model Deployment Name> <funcapp_name>  <Azure Cosmos DB Connection String>
+    ./deploy.sh <resource-group-name>  <region>  <Azure Open AI Endpoint> <Azure Open AI Key> <Azure Open AI Model Deployment Name> <funcapp_name>  <Azure Cosmos DB Account name>
 
     For e.g
-    ./deploy.sh chatgpt-webapp-rg  westus2 https://openairesourcename.openai.azure.com/ key1 gpt-35-turbo chatgptwebapp1 chatgptwebapp1store AccountEndpoint=https://some-serverless-sqlapi.documents.azure.com:443/;AccountKey===;someaccountkey
+    ./deploy.sh chatgpt-webapp-rg  westus2 https://openairesourcename.openai.azure.com/ key1 gpt-35-turbo chatgptwebapp1 chatgptwebapp1store cosmosdb-chat
 
 ### (Optional) Deploy only the Function app.
 The function app can be deployed using the below func cli. Azure Functions Cli can be installed from [here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools).

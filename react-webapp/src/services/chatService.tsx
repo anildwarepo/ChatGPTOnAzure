@@ -42,19 +42,20 @@ export async function sendChatMessage(apiRequest: ChatAPIRequest, props : any) {
 }
 
 
-export async function fetchChatHistory(apiRequest: ChatAPIRequest) {
-    const headers = new Headers();
-    //const bearer = `Bearer ${accessToken}`;
-
-    //headers.append("Authorization", bearer);
+export async function fetchChatHistory(apiRequest: ChatAPIRequest, props : any) {
+    const accessToken = await getAccessToken(props.instance, props.accounts);
+    const bearer = `Bearer ${accessToken}`;
     
     const options = {
         method: "GET",
-        headers: headers,
+        headers: { 'Content-Type': 'application/json', 'Authorization': bearer },
     };
 
 
-    return fetch(chatConfig.chatApiEndPoint + "&email=" + apiRequest.userInfo.email, options)
-        .then(response => response.json())
-        .catch(error => console.log(error));
+    return fetch(chatConfig.chatApiEndPoint + "?email=" + apiRequest.userInfo.email, options)
+        .then((response: any) => {
+            return response.json();
+        }).catch((error: any) => {
+            console.log(error);
+        });
 }

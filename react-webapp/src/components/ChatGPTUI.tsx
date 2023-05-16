@@ -134,7 +134,7 @@ export const ChatGPTUI = (props: any) => {
 
   const getChatHistory = () => {
     setPrevChatHistory([]);
-    fetchChatHistory(chatAPIRequest).then((response) => {
+    fetchChatHistory(chatAPIRequest, props).then((response) => {
         console.log(response);
         response.chatHistory.reverse().map ((doc: any) => {
             let prompt = JSON.parse(doc);
