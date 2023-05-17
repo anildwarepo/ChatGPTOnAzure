@@ -19,7 +19,7 @@ To deploy this web app and azure functions using a single cli command:
 
 
 
-## Deploy ChatGPT on Azure Webapp
+## Deploy ChatGPT on Azure as a Static Website using Azure Storage
 
 To deploy the web app, run the below commands in bash CLI as shown.
 
