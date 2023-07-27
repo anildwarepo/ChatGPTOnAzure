@@ -31,10 +31,10 @@ functions= [
 
 def add_azure_tag(tagkey, tagvalue):
     # Your application's credentials
-    client_id = "93b4dfc8-f229-496e-9295-15190a07d668"
-    client_secret = "G_V8Q~-As5Jn1Jr8EuwZzeGgVa3bM1V7RFihxblG"
-    tenant_id = "7f1290b4-3c39-4277-a63e-c577680a12cf"
-    subscription_id = "f1a8fafd-a8a3-46d8-bb5e-01deb63d275d"    
+    client_id = ""
+    client_secret = ""
+    tenant_id = ""
+    subscription_id = ""    
 
     # Azure AD OAuth endpoints
     token_endpoint = f"https://login.microsoftonline.com/{tenant_id}/oauth2/token"
