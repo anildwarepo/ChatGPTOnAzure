@@ -8,8 +8,10 @@ export interface ChatAPIRequest {
 
         gptPrompt: GptPrompt;
         maxTokens: number;
+        topKSearchResults: number;
         temperature: number;
         includeChatHistory: boolean;
+        useSearchEngine: boolean;
         chatHistoryCount: number;
         userInfo : { name: string; email: string; tenantId: string; }
 }

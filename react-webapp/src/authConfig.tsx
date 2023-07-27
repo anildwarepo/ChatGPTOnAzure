@@ -66,7 +66,6 @@ export const user_impersonation_scope = {
     scopes: [config.USER_IMPERSONATIION_SCOPE] //["api://5924b827-87cb-4029-9c51-4481fd427fd5/user_impersonation"]
 };
 
-
 /**
  * Add here the scopes to request when obtaining an access token for MS Graph API. For more information, see:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md

@@ -17,6 +17,8 @@ const getAccessToken = (instance: any, accounts : any) => {
     });
 }
 
+
+
 export async function sendChatMessage(apiRequest: ChatAPIRequest, props : any) {
  
     
