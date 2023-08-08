@@ -1,0 +1,30 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=asdft",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+    "AFR_ENDPOINT": "",
+    "AFR_API_KEY": "",
+    "OPENAI_RESOURCE_ENDPOINT": "",
+    "OPENAI_API_KEY": "",
+    "OPENAI_API_VERSION": "2023-07-01-preview",
+    "OPENAI_API_KEY_EMBEDDING": "",
+    "OPENAI_ENDPOINT_EMBEDDING": "",
+    "AZSEARCH_EP": "",
+    "AZSEARCH_KEY": "",
+    "INDEX_NAME": "",
+    "VECTOR_INDEX_NAME": "",
+    "DEPLOYMENT_NAME": "",
+    "OPENAI_MODEL_NAME": "",
+    "SEMANTIC_CONFIG": "",
+    "CHAT_HISTORY_LOGGING_ENABLED": true,
+    "SYSTEM_MESSAGE": "You are an Open AI assistant.",
+    "SYSTEM_MESSAGE_FOR_SEARCH": "Assistant helps users with answers to the questions.\n Answer ONLY with the facts listed in the list of context below. If there isn't enough information below, say you don't know. \n   Do not generate answers that don't use the context below. \n  Each source has a name followed by colon and the actual information, always include the source name for each fact you use in the response.\n  Use square brakets to reference the source, e.g. [info1.txt]. Don't combine sources, list each source separately, e.g. [info1.txt][info2.pdf].",
+    "AzureCosmosDBConnectionString": ""
+},
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*"
+  }
+}
