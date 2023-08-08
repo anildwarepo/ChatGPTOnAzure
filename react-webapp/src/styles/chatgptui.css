@@ -7,13 +7,14 @@
   .main-left-column { 
     width: 26%;
     background-color: #f0f0f0;
-    height: 100vh;
+    height: 95vh;
     position: fixed;
     top: 56px;
     left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
   
   }
   
@@ -41,7 +42,7 @@
   .btn-newchat {
   
     border: 1px solid transparent;
-    background-color: rgb(55, 160, 87);
+    background-color:#65b04fda;
     width: 90%;
     height: 40px;
     color: white;
@@ -59,9 +60,8 @@
   
   .chat-settings {
     border-radius: 0px;
-    margin: 10px;
-    padding:10px;
-    width:95%;
+
+    width:90%;
   }
   
   
@@ -69,7 +69,7 @@
   .accordion-header button {
     color: white;
     font-size: medium;
-    text-align: left;
+    text-align: center;
   }
   
   .accordion-body {
@@ -78,7 +78,7 @@
   
   .accordion-button {
     width:100%;
-    background-color:  rgb(55, 160, 87);
+    background-color:  #65b04fda;
     border-color: transparent;
     height: 40px;
   }
@@ -95,7 +95,7 @@
     top : 56px;
     height:85%;
     overflow-y: auto;  
-  
+    width: 74%;
   
     
   }
@@ -136,12 +136,12 @@
   
       
     align-self: flex-end;
-    max-width: 70%;
+    /*max-width: 70%;*/
     flex-direction: row-reverse;
   }
   
   .chat-item-left{
-    max-width: 70%;
+    /*max-width: 70%;*/
     align-self: flex-start;
     flex-direction: row;
   }
@@ -172,7 +172,7 @@
   }
   
   .chat-item-message-user {
-    background-color: rgba(43, 84, 199, 0.836);
+    background-color: rgba(55, 94, 202, 0.836);
     color: white;
     text-align: left;
     border-radius: 0px;
@@ -182,7 +182,7 @@
   }
   
   .chat-item-message-bot {
-    background-color: rgba(219, 217, 59, 0.712);
+    background-color: rgba(245, 245, 239, 0.712);
     text-align: left;
     border-radius: 0px;
     padding:10px;
@@ -248,3 +248,5 @@
     margin-top:5px;
   
   }
+
+

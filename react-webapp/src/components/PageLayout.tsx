@@ -6,8 +6,7 @@ import { SignInButton } from "./SignInButton";
 import { SignOutButton } from "./SignOutButton";
 import Landing from "./Landing";
 import { ChatGPTUI } from "./ChatGPTUI";
-import { user_impersonation_scope } from "../authConfig";
-
+import config from "../config.json";
 import "../styles/pagelayout.css";
 
 
@@ -23,25 +22,44 @@ export const PageLayout = (props: any) => {
             
                 <Navbar.Brand href="/">ChatGPT on Azure</Navbar.Brand>
                 <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end">
-                    
-                    { isAuthenticated ? <SignOutButton accounts={accounts} /> : <SignInButton /> }
-                </Navbar.Collapse>
+                <>
+                    { config.UseAADAuth ?
+                    <Navbar.Collapse className="justify-content-end">
+                        
+                        { isAuthenticated ? <SignOutButton accounts={accounts} /> : <SignInButton /> }
+                    </Navbar.Collapse>
+                    : <></>
+                    }
+                </>
+                
             </Navbar>
-           
-            <AuthenticatedTemplate>
-                {/* 
-                    <TestComponent accounts={accounts}/> 
-                    <ChatGPTUI accounts={accounts}/>
-                */}
-                <ChatGPTUI accounts={accounts} instance={instance}/>
-                   
-            </AuthenticatedTemplate>
+            <>
+                { config.UseAADAuth ? 
+                
+                <>
+                <AuthenticatedTemplate>
+                    {/* 
+                        <TestComponent accounts={accounts}/> 
+                        <ChatGPTUI accounts={accounts}/>
+                    */}
+                    <ChatGPTUI accounts={accounts} instance={instance}/>
+                    
+                </AuthenticatedTemplate>
 
-            <UnauthenticatedTemplate>
-                <Landing/>
-            </UnauthenticatedTemplate>
-        
+                <UnauthenticatedTemplate>
+                    
+                    { config.UseAADAuth ? <Landing/> : <></>}
+                    
+                </UnauthenticatedTemplate>
+                </>
+                :
+                <UnauthenticatedTemplate>
+                    <ChatGPTUI accounts={accounts} instance={instance}/>
+                </UnauthenticatedTemplate>
+            
+            
+                }
+            </>
             
             
             

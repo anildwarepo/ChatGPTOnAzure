@@ -119,10 +119,10 @@ FUNC_NAME=$func_prefix
 
 WEB_APP_NAME="azurechatgpt$FUNC_NAME"
 
-#check if backend directory exists
-if [ ! -d "backend" ]
+#check if semantic-search-api-durable-functions directory exists
+if [ ! -d "semantic-search-api-durable-functions" ]
 then
-    printf "\nError: backend directory not found. Exiting...\n"
+    printf "\nError: semantic-search-api-durable-functions directory not found. Exiting...\n"
     exit 1
 fi
 
@@ -221,7 +221,7 @@ then
 fi
 
 
-cd backend
+cd semantic-search-api-durable-functions
 
 while true;do
     function_name=$(az resource list -g $RESOURCE_GROUP | jq -r --arg FUNC_NAME $FUNC_NAME '.[] | select(.type == "Microsoft.Web/sites") | select(.name = $FUNC_NAME) | .name')

@@ -18,6 +18,42 @@ To deploy this web app and azure functions using a single cli command:
 - npm react-script package installed.
 
 
+## Run locally
+To deploy locally, run the below commands. Rename local.settings-rename.json to local.settings.json.
+Update the values for the below keys in local.settings.json.
+
+    "AFR_ENDPOINT": "",
+    "AFR_API_KEY": "",
+    "OPENAI_RESOURCE_ENDPOINT": "",
+    "OPENAI_API_KEY": "",
+    "OPENAI_API_KEY_EMBEDDING": "",
+    "OPENAI_ENDPOINT_EMBEDDING": "",
+    "AZSEARCH_EP": "",
+    "AZSEARCH_KEY": "",
+    "INDEX_NAME": "",
+    "VECTOR_INDEX_NAME": "",
+    "DEPLOYMENT_NAME": "",
+    "OPENAI_MODEL_NAME": "",
+    "SEMANTIC_CONFIG": "",
+    "AzureCosmosDBConnectionString": ""
+
+Run the below commands in CLI like windows powershell or bash. 
+    
+    git clone https://github.com/anildwarepo/ChatGPTOnAzure
+
+    cd semantic-search-api-durable-functions
+    func start
+    
+    cd ..
+
+    cd react-webapp
+    npm install
+    npm start
+
+
+
+
+git clone https://github.com/anildwarepo/ChatGPTOnAzure
 
 ## Deploy ChatGPT on Azure as a Static Website using Azure Storage
 
@@ -47,3 +83,16 @@ The function app can be deployed using the below func cli. Azure Functions Cli c
     #deploy function app
     FUNC_NAME="<name of function>"
     func azure functionapp publish $FUNC_NAME --force --python
+
+
+## Configuration AAD Authentication
+This support supports AAD authentication on both react web app and Azure functions using oauth. 
+To configure AAD authentication, update C:\source\repos\ChatGPTOnAzure\react-webapp\src\config.json and change "UseAADAuth": false to 
+"UseAADAuth": true.
+
+You can then run deploy.sh as shown above to deploy the apps to Azure. 
+
+
+## Create Vector Index and ingest documents right from the UI. 
+
+![](webapp-pic1.png)

@@ -9,10 +9,13 @@ export interface ChatAPIRequest {
         gptPrompt: GptPrompt;
         maxTokens: number;
         topKSearchResults: number;
+        numChunk: number;
         temperature: number;
         includeChatHistory: boolean;
         useSearchEngine: boolean;
+        useVectorCache: boolean;
         chatHistoryCount: number;
+        chatHistory:string,
         userInfo : { name: string; email: string; tenantId: string; }
 }
 

@@ -2,5 +2,10 @@
     "TENANT_ID": "7f1290b4-3c39-4277-a63e-c577680a12cf",
     "CLIENT_ID": "93b4dfc8-f229-496e-9295-15190a07d668",
     "USER_IMPERSONATIION_SCOPE": "api://d3746380-b5ae-4f2c-bfa6-cf9b2bd4d157/user_impersonation",
-    "CHAT_API_ENDPOINT": "http://localhost:7071/api/openai" 
+    "CHAT_API_ENDPOINT": "http://localhost:7071/api/orchestrators/chatbot_orchestrator/chatbot_api",
+    "CHAT_API_STATUS_ENDPOINT": "http://localhost:7071/api/orchestrators/chatbot_orchestrator/check_status",
+    "FILE_UPLOAD_ENDPOINT": "http://localhost:7071/api/file_upload",
+    "FILE_UPLOAD_ENDPOINT_CHECK_PROGRESS": "http://localhost:7071/api/file_upload_progress/",
+    "UseAADAuth": false,
+    "email": "someone@example.com"
 }
