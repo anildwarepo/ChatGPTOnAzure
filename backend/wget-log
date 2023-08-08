@@ -1,6 +1,0 @@
---2023-05-11 00:13:46--  https://func-testfunc1.azurewebsites.net/api/openai?code=uGBRGwZQ7i4KDc3HEpC0WttkX2ZWPeeeK-jrLBns7zLAAzFuhiv7ug==
-Resolving func-testfunc1.azurewebsites.net (func-testfunc1.azurewebsites.net)... 13.64.73.110
-Connecting to func-testfunc1.azurewebsites.net (func-testfunc1.azurewebsites.net)|13.64.73.110|:443... connected.
-HTTP request sent, awaiting response... 500 Internal Server Error
-2023-05-11 00:13:46 ERROR 500: Internal Server Error.
-
