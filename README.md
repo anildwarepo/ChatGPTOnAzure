@@ -44,6 +44,8 @@ Run the below commands in CLI like windows powershell or bash.
     git clone https://github.com/anildwarepo/ChatGPTOnAzure
 
     cd semantic-search-api-durable-functions
+    python -m venv .venv
+    pip install -r requirements.txt
     func start
     
     cd ..
