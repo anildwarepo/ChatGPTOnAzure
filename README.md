@@ -1,6 +1,8 @@
 # ChatGPTOnAzure
 
-A react based web app that uses Azure Functions to connect to Azure Open AI. 
+A react based web app that uses Azure Durable Functions to connect to Azure Open AI. 
+It also can ingest documents and create a vector index using Azure Cognitive Search. 
+
 
 
 ![](webapp-pic.png)
