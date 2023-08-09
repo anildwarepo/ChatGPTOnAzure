@@ -1,7 +1,9 @@
 # ChatGPTOnAzure
 
 A react based web app that uses Azure Durable Functions to connect to Azure Open AI. 
-It also can ingest documents and create a vector index using Azure Cognitive Search. 
+It can ingest documents and create a vector index using Azure Cognitive Search. 
+It uses Semantic Cache to cache LLM response to reduce LLM traffic for frequently used questions and reduces LLM calls. 
+It has options to use Faiss for in-memory cache for low volume data and Azure Cognitive Search Vector DB for high volume data. 
 
 
 
@@ -100,3 +102,7 @@ You can then run deploy.sh as shown above to deploy the apps to Azure.
 ## Create Vector Index and ingest documents right from the UI. 
 
 ![](webapp-pic1.png)
+
+## Semantic Cache in action
+
+![](webapp-pic2.png)
