@@ -64,7 +64,7 @@ def fetch_chat_history(input):
 
 
 
-
+# input['data'] format
 '''
 prompt = {"gptPrompt": {"systemMessage": {"role": "system", 
 "content": "Assistant helps users with answers to the questions.\\n Answer ONLY with the facts listed in the list of context below. 
@@ -111,7 +111,7 @@ def chatbot_api(input, documents: func.Out[func.Document]):
 
     if logging_enabled:
         log = utils_helper.createlog(prompt, openai_response)
-        #documents.set(func.Document.from_json(json.dumps(log)))
+        documents.set(func.Document.from_json(json.dumps(log)))
 
     return {"api": "chatapi", "method": "POST", "status": "success", "response": openai_response}
 

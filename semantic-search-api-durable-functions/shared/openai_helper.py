@@ -147,7 +147,7 @@ def call_openai(prompt):
     openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
     system_message  = prompt['gptPrompt']['systemMessage']
     
-    question = prompt['chatHistory'] + prompt['gptPrompt']['question'] if prompt.get('includeChatHistory') else prompt['gptPrompt']['question']
+    question = prompt['chatHistory'] + prompt['gptPrompt']['question']['content'] if prompt.get('includeChatHistory') else prompt['gptPrompt']['question']['content']
 
 
     new_prompt= [system_message] + [question]

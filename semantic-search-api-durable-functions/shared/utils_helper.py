@@ -25,7 +25,7 @@ def createlog(prompt, response):
     new_uuid = str(uuid.uuid4())
     timestamp = datetime.datetime.utcnow()
     
-    log = { "utcTimeStamp": str(timestamp),  "conversationId" : new_uuid, "prompt" : prompt['gptPrompt'], "userInfo": prompt['userInfo'], "response" : response }
+    log = { "id": new_uuid, "utcTimeStamp": str(timestamp),  "conversationId" : new_uuid, "prompt" : prompt['gptPrompt'], "userInfo": prompt['userInfo'], "response" : response }
     return log
 
 
