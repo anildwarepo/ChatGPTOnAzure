@@ -16,7 +16,14 @@ export interface ChatAPIRequest {
         useVectorCache: boolean;
         chatHistoryCount: number;
         chatHistory:string,
-        userInfo : { name: string; email: string; tenantId: string; }
+        userInfo : UserInfo
+}
+
+
+export interface UserInfo {
+    name: string; 
+    email: string; 
+    tenantId: string;
 }
 
 export interface GptPrompt {

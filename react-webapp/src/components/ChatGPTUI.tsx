@@ -57,10 +57,8 @@ export const ChatGPTUI = (props: any) => {
     }
   });
 
-  useEffect(() => {
-    getBotApiStatus();
-  },[]);
-
+  
+  
   useEffect(() => {
     divRef.current?.scrollIntoView({ inline: 'nearest', block: 'start', behavior: 'smooth' });
   }, [chatHistory]);
@@ -88,9 +86,9 @@ export const ChatGPTUI = (props: any) => {
     setParameters(prevState => ({...prevState, useSearchEngine: useSearchEngine})); 
     }, [useSearchEngine]);
 
-    useEffect(() => {
-        setParameters(prevState => ({...prevState, useVectorCache: useVectorCache})); 
-        }, [useVectorCache]);
+  useEffect(() => {
+    setParameters(prevState => ({...prevState, useVectorCache: useVectorCache})); 
+    }, [useVectorCache]);
     
   useEffect(() => {
       setParameters(prevState => ({...prevState, gptPrompt: {...prevState.gptPrompt, systemMessage: {...prevState.gptPrompt.systemMessage, content: systemMessage}} })); 
@@ -139,6 +137,10 @@ export const ChatGPTUI = (props: any) => {
     return () => clearInterval(intervalId);
   }, [entityId]);
 
+  useEffect(() => {
+    getBotApiStatus();
+  },[]);
+
   const handleUserQueryChange = (e: any) => {
     setUserQuery(e.target.value);
   }
@@ -150,14 +152,14 @@ export const ChatGPTUI = (props: any) => {
         let newValue = userQuery + "\n";
         setUserQuery(newValue);
 
-        console.log("Shift + Enter pressed - " + userQuery)
+        //console.log("Shift + Enter pressed - " + userQuery)
         return;
     }
     if (e.keyCode === 13) { // 13 is the code for "Enter" key
         e.preventDefault();
         // Handle the shift + enter key combination
         sendMessage();
-        console.log("Enter pressed")
+        ///console.log("Enter pressed")
         return;
     }
   }
@@ -279,13 +281,15 @@ export const ChatGPTUI = (props: any) => {
       }
   };
 
-
-
     
 
   const getBotApiStatus = () => {
+    
+ 
     setPrevChatHistory([]);
-    fetcheBotApiStatus(props).then((response) => {
+    
+    
+    fetcheBotApiStatus(chatAPIRequest.userInfo ,props).then((response) => {
         const botItem = {userType: "log", userMessage: response.message};
         const userItem = {userType: "log", userMessage: "Fetching Bot API Status..."};
         setPrevChatHistory(() => {
@@ -294,9 +298,10 @@ export const ChatGPTUI = (props: any) => {
             return updatedHistory;
         });
     });
+    
   }
 
-  
+
 
   const validateParameters = (e: any) => {
     switch(e.target.id) {
@@ -346,65 +351,7 @@ export const ChatGPTUI = (props: any) => {
 
   }
 
-  const validateParameters2 = (e: any) => {
-        
-    switch(e.target.id) {
-        case 'maxTokens':
-            if(e.target.value >= 50 && e.target.value <= 4000) {
-                setMaxTokens(e.target.value);
-                setParameters(prevState => ({...prevState, maxTokens: e.target.value}));
-            }
-            
-            break;
-        case 'topKSearchResults':
-            if(e.target.value >= 1 && e.target.value <= 20) {
-                setTopKSearchResults(e.target.value);
-                setParameters(prevState => ({...prevState, topKSearchResults: e.target.value}));
-            }
-            break;
-        case 'numChunk':
-            if(e.target.value >= 20 && e.target.value <= 200) {
-                setnumChunk(e.target.value);
-                setParameters(prevState => ({...prevState, numChunk: e.target.value}));
-            }
-            break;             
-        case 'temperature':
-            const newTemperature = parseFloat(e.target.value);    
-            if(!isNaN(newTemperature) && newTemperature >= 0.0 && newTemperature <= 1.0) {
-                setTemperature(newTemperature);
-                setParameters(prevState => ({...prevState, temperature: newTemperature}));
-            }
-            break;
-        case 'systemMessage':
-            setSystemMessage(e.target.value);
-            setParameters(prevState => ({...prevState, systemMessage: e.target.value}));
-            break;
-        case 'includeChatHistory':
-            setIncludeChatHistory(!includeChatHistory);
-            break;
-        case 'useVectorCache':
-            setuseVectorCache(!useVectorCache);
-            break;
-        case 'useSearchEngine':
-            setuseSearchEngine(!useSearchEngine);
-            if(!useSearchEngine) {
-                setSystemMessage("Assistant helps users with answers to the questions.\n Answer ONLY with the facts listed in the list of context below. If there isn't enough information below, say you don't know. \n   Do not generate answers that don't use the context below. \n  Each source has a name followed by colon and the actual information, always include the source name for each fact you use in the response.\n  Use square brakets to reference the source, e.g. [info1.txt]. Don't combine sources, list each source separately, e.g. [info1.txt][info2.pdf].");
-            }
-            else {  
-                setSystemMessage("You are an Open AI assistant.");
-            }
-            break;
-        case 'chatHistoryCount':
-            //if(e.target.value >= 1 && e.target.value <= 50) {
-            setChatHistoryCount(e.target.value)
-            setParameters(prevState => ({...prevState, chatHistoryCount: e.target.value}));
-            //}
-            break;
-        default:
-            return;
-    }
-       
-  }
+  
 
   return (
       <div className="main-container-div">
@@ -413,7 +360,7 @@ export const ChatGPTUI = (props: any) => {
            
             
             <input type="button" value="New Chat" className="btn-newchat" onClick={startNewChat} />
-            {/*<input type="button" value="Load Chat History" className="btn-newchat" onClick={() => { getChatHistory(); }} /> */}
+            <input type="button" value="Load Chat History" className="btn-newchat" onClick={() => { getChatHistory(); }} /> 
               <Accordion className="chat-settings" defaultActiveKey="0">
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>

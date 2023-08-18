@@ -44,8 +44,8 @@ endpoint = os.environ["AFR_ENDPOINT"]
 key = os.environ["AFR_API_KEY"]
 credential = AzureKeyCredential(SEARCH_API_KEY)
 openai.api_type = "azure"  
-openai.api_key = os.getenv("OPENAI_API_KEY_EMBEDDING")  
-openai.api_base = os.getenv("OPENAI_ENDPOINT_EMBEDDING")  
+openai.api_key = os.getenv("OPENAI_API_KEY")  
+openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  
 openai.api_version = os.getenv("OPENAI_API_VERSION")  
 
 def create_vector_index(index_name=SEARCH_INDEX):
@@ -163,7 +163,7 @@ def create_chunked_data_files(page_idx, search_doc):
 # Function to generate embeddings for title and content fields, also used for query embeddings
 def generate_embeddings(text):
     response = openai.Embedding.create(
-        input=text, engine="text-embedding-ada-002")
+        input=text, engine=os.getenv("OPENAI_EMBEDDING_MODEL"))
     embeddings = response['data'][0]['embedding']
     return embeddings
 

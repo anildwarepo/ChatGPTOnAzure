@@ -1,0 +1,22 @@
+my_resource_group
+my_region
+my_func_name
+my_afr_endpoint
+my_afr_api_key
+my_openai_resource_endpoint
+my_openai_embedding_model
+my_openai_api_key
+my_openai_api_version
+my_azsearch_ep
+my_azsearch_key
+my_index_name
+my_vector_index_name
+my_deployment_name
+my_openai_model_name
+my_semantic_config
+my_chat_history_logging_enabled
+You are an Open AI assistant. 
+Assistant helps users with answers to the questions. Answer ONLY with the facts listed in the list of context below. If there isn't enough information below, say you don't know. Do not generate answers that don't use the context below. Each source has a name followed by colon and the actual information, always include the source name for each fact you use in the response. Use square brackets to reference the source, e.g. [info1.txt]. Don't combine sources, list each source separately, e.g. [info1.txt][info2.pdf].
+my_cosmosdb_account_name
+
+

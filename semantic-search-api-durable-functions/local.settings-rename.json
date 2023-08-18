@@ -9,8 +9,6 @@
     "OPENAI_RESOURCE_ENDPOINT": "",
     "OPENAI_API_KEY": "",
     "OPENAI_API_VERSION": "2023-07-01-preview",
-    "OPENAI_API_KEY_EMBEDDING": "",
-    "OPENAI_ENDPOINT_EMBEDDING": "",
     "AZSEARCH_EP": "",
     "AZSEARCH_KEY": "",
     "INDEX_NAME": "",

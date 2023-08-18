@@ -5,7 +5,7 @@ import azure.durable_functions as df
 from shared import search_helper, openai_helper, utils_helper
 import tiktoken
 from azure.storage.blob import BlobServiceClient
-
+from azure.durable_functions import EntityId
 
 activity_bp = df.Blueprint()
 
@@ -23,10 +23,9 @@ def check_enviroment_variables():
         "AFR_ENDPOINT",
         "AFR_API_KEY",
         "OPENAI_RESOURCE_ENDPOINT",
+        "OPENAI_EMBEDDING_MODEL",
         "OPENAI_API_KEY",
         "OPENAI_API_VERSION",
-        "OPENAI_API_KEY_EMBEDDING",
-        "OPENAI_ENDPOINT_EMBEDDING",
         "AZSEARCH_EP",
         "AZSEARCH_KEY",
         "INDEX_NAME",
@@ -49,7 +48,6 @@ def check_enviroment_variables():
 def check_status(params):
     try:
         check_enviroment_variables()
-
         ll_response = openai_helper.call_openai_basic([{"role": "system", "content": "You are an enterprise search agent helping users with useful response on their questions. You need to greet users and ask for question that you can help with."},{"role": "user", "content": "Greet user and ask for question"}])
         return {"api": "chatapi_status", "method": "GET", "status": "success", "chatHistory": None, "message": ll_response} 
     

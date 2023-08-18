@@ -1,4 +1,4 @@
-import { ChatAPIRequest } from './interfaces/iprompt';
+import { ChatAPIRequest, UserInfo } from './interfaces/iprompt';
 import { user_impersonation_scope } from "../authConfig";
 import config from "../config.json";
 
@@ -51,13 +51,14 @@ export async function sendChatMessage(apiRequest: ChatAPIRequest, props : any) {
         });
 }
 
-export async function fetcheBotApiStatus(props : any) {
+export async function fetcheBotApiStatus(userInfo: UserInfo ,props : any) {
     const accessToken = await getAccessToken(props.instance, props.accounts);
     const bearer = `Bearer ${accessToken}`;
     
     const options = {
-        method: "GET",
+        method: "POST",
         headers: { 'Content-Type': 'application/json', 'Authorization': bearer },
+        body: JSON.stringify(userInfo)
     };
 
 
@@ -155,7 +156,7 @@ export async function fetchChatHistory(apiRequest: ChatAPIRequest, props : any) 
     };
 
 
-    return fetch(config.CHAT_API_ENDPOINT + "?email=" + apiRequest.userInfo.email, options)
+    return fetch(config.CHAT_API_HISTORY_ENDPOINT + "?email=" + apiRequest.userInfo.email, options)
         .then((response: any) => {
             if (response.ok) {
                 return response.json(); // Parse the JSON response

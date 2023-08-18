@@ -291,10 +291,10 @@ def call_openai_with_search(search_prompt, prompt, useVectorCache) -> LLM_Respon
         return e,  None 
 
 def generate_embeddings(text):
-    openai.api_key = os.getenv("OPENAI_API_KEY_EMBEDDING")  # SET YOUR OWN API KEY HERE
-    openai.api_base = os.getenv("OPENAI_ENDPOINT_EMBEDDING")  # SET YOUR RESOURCE ENDPOINT
+    openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
+    openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
     response = openai.Embedding.create(
-        input=text, engine="text-embedding-ada-002")
+        input=text, engine=os.getenv("OPENAI_EMBEDDING_MODEL"))
     embeddings = response['data'][0]['embedding']
     return embeddings
 

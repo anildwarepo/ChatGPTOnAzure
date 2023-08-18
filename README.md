@@ -16,7 +16,8 @@ To deploy this web app and azure functions using a single cli command:
 - az cli installed.
 - Azure Functions Core tools installed.
 - bash with jq installed. Azure Cloud shell can be used. 
-- Azure Open AI resource created and ChatGPT turbo model deployed. 
+- Azure Open AI resource created and ChatGPT turbo and text-ada-embedding-002 models deployed. 
+- Azure Form Recognizer resource deployed.
 - Deployment user needs to have Azure Active Directory Service Principal create permissions and grant admin consent to API permissions.
 - Azure Resource Group creation and contributor permissions.
 - npm react-script package installed.
@@ -26,20 +27,29 @@ To deploy this web app and azure functions using a single cli command:
 To deploy locally, run the below commands. Rename local.settings-rename.json to local.settings.json.
 Update the values for the below keys in local.settings.json.
 
-    "AFR_ENDPOINT": "",
-    "AFR_API_KEY": "",
-    "OPENAI_RESOURCE_ENDPOINT": "",
-    "OPENAI_API_KEY": "",
-    "OPENAI_API_KEY_EMBEDDING": "",
-    "OPENAI_ENDPOINT_EMBEDDING": "",
-    "AZSEARCH_EP": "",
-    "AZSEARCH_KEY": "",
-    "INDEX_NAME": "",
-    "VECTOR_INDEX_NAME": "",
-    "DEPLOYMENT_NAME": "",
-    "OPENAI_MODEL_NAME": "",
-    "SEMANTIC_CONFIG": "",
-    "AzureCosmosDBConnectionString": ""
+{
+    "AzureWebJobsStorage": "your_storage_connection_string",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsFeatureFlags": "",
+    "AFR_ENDPOINT": "your_afr_endpoint",
+    "AFR_API_KEY": "your_afr_api_key",
+    "OPENAI_RESOURCE_ENDPOINT": "your_openai_resource_endpoint",
+    "OPENAI_EMBEDDING_MODEL": "your_openai_embedding_model",
+    "OPENAI_API_KEY": "your_openai_api_key",
+    "OPENAI_API_VERSION": "your_openai_api_version",
+    "AZSEARCH_EP": "your_azsearch_endpoint",
+    "AZSEARCH_KEY": "your_azsearch_key",
+    "INDEX_NAME": "your_index_name",
+    "VECTOR_INDEX_NAME": "your_vector_index_name",
+    "DEPLOYMENT_NAME": "your_deployment_name",
+    "OPENAI_MODEL_NAME": "your_openai_model_name",
+    "SEMANTIC_CONFIG": "your_semantic_config",
+    "CHAT_HISTORY_LOGGING_ENABLED": "true",
+    "SYSTEM_MESSAGE": "Welcome to the chat!",
+    "SYSTEM_MESSAGE_FOR_SEARCH": "How can I help you?",
+    "AzureCosmosDBConnectionString": "your_cosmos_db_connection_string"
+}
+
 
 Run the below commands in CLI like windows powershell or bash. 
     
@@ -72,11 +82,15 @@ To deploy the web app, run the below commands in bash CLI as shown.
 
     cd ChatGPTOnAzure
 
-    chmod +x deploy.sh
-    ./deploy.sh <resource-group-name>  <region>  <Azure Open AI Endpoint> <Azure Open AI Key> <Azure Open AI Model Deployment Name> <funcapp_name>  <Azure Cosmos DB Account name>
+    # Rename deploy.config.txt.rename 
+    mv deploy.config.txt.rename deploy.config.txt
 
-    For e.g
-    ./deploy.sh chatgpt-webapp-rg  westus2 https://openairesourcename.openai.azure.com/ key1 gpt-35-turbo chatgptwebapp1 chatgptwebapp1store cosmosdb-chat
+    # update args values in deploy.config.txt one per line using text editor.
+
+    chmod +x deploy.sh
+    ./deploy.sh 
+    
+
 
 ### (Optional) Deploy only the Function app.
 The function app can be deployed using the below func cli. Azure Functions Cli can be installed from [here](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools).

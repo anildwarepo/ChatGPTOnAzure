@@ -1,6 +1,7 @@
 import azure.functions as func
 import azure.durable_functions as df
 import time, datetime
+import uuid
 import os
 import base64
 from azure.storage.blob import BlobServiceClient, BlobClient, generate_blob_sas, BlobSasPermissions
@@ -42,8 +43,8 @@ endpoint = os.environ["AFR_ENDPOINT"]
 key = os.environ["AFR_API_KEY"]
 credential = AzureKeyCredential(SEARCH_API_KEY)
 openai.api_type = "azure"  
-openai.api_key = os.getenv("OPENAI_API_KEY_EMBEDDING")  
-openai.api_base = os.getenv("OPENAI_ENDPOINT_EMBEDDING")  
+openai.api_key = os.getenv("OPENAI_API_KEY")  
+openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  
 openai.api_version = os.getenv("OPENAI_API_VERSION") 
 
 # File Upload Status Entity
@@ -51,17 +52,35 @@ openai.api_version = os.getenv("OPENAI_API_VERSION")
 def entity_function(context: df.DurableEntityContext):
     current_value = context.get_state(lambda: "Processing...")
     operation = context.operation_name
-    if operation == "add":
-        time.sleep(30)
-        amount = context.get_input()
-        current_value += "amount"
-    elif operation == "upload_file":
+    if operation == "upload_file":
         file = context.get_input()
         result = upload_file_entity(file)
         current_value = "Success"
         context.set_state(current_value)
         context.set_result(result)
     context.set_state(current_value)
+
+@entities_bp.entity_trigger(context_name="context")
+def user_session_state_entity(context: df.DurableEntityContext):
+    current_value = context.get_state()
+    operation = context.operation_name
+    if operation == "get_state":
+        return current_value
+    elif operation == "set_state":
+        new_state = get_user_session_state_entity(context)
+        current_value = new_state
+        context.set_state(current_value)
+    #context.set_state(current_value)
+
+
+
+def get_user_session_state_entity(context: df.DurableEntityContext):
+    user_state_data = context.get_input()
+    timestamp = datetime.datetime.utcnow()
+    new_uuid = str(uuid.uuid4())
+    return { "utcTimeStamp": str(timestamp),  "conversationId" : new_uuid, "userInfo": user_state_data}
+
+
 
 def upload_file_entity(activity_input):
     #file = activity_input['file']
@@ -121,7 +140,7 @@ def ingest_from_url(formUrl, fileName):
 # Function to generate embeddings for title and content fields, also used for query embeddings
 def generate_embeddings(text):
     response = openai.Embedding.create(
-        input=text, engine="text-embedding-ada-002")
+        input=text, engine=os.getenv("OPENAI_EMBEDDING_MODEL"))
     embeddings = response['data'][0]['embedding']
     return embeddings
 

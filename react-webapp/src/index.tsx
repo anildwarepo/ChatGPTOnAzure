@@ -15,11 +15,11 @@ const root = ReactDOM.createRoot(
 const msalInstance = new PublicClientApplication(msalConfig);
 
 root.render(
-  <React.StrictMode>
-     <MsalProvider instance={msalInstance}>
+  <>
+   <MsalProvider instance={msalInstance}>
             <App />
-      </MsalProvider>
-  </React.StrictMode>
+    </MsalProvider>
+  </>
 );
 
 

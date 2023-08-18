@@ -31,7 +31,7 @@ async def file_upload(req: func.HttpRequest, client) -> func.HttpResponse:
 
 @orchestrator_bp.route(route="file_upload_progress/{prevEntityId}")
 @orchestrator_bp.durable_client_input(client_name="client")
-async def get_progress(req: func.HttpRequest, client, context) -> func.HttpResponse:
+async def get_progress(req: func.HttpRequest, client) -> func.HttpResponse:
     prevEntityId = req.route_params.get('prevEntityId')
     entityId = df.EntityId("entity_function", prevEntityId)
     entity_state_result = await client.read_entity_state(entityId)
@@ -48,7 +48,6 @@ def chatbot_orchestrator(context):
     activity_input = context.get_input()
     result = yield context.call_activity(activity_input['activityName'], activity_input)
     return result
-
 
 
 def get_activity_parameters(req: func.HttpRequest, activityName: str):
