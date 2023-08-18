@@ -1,7 +1,7 @@
 {
     "TENANT_ID": "7f1290b4-3c39-4277-a63e-c577680a12cf",
-    "CLIENT_ID": "58f993b4-6400-4a73-8f1b-c7656c2153ba",
-    "USER_IMPERSONATIION_SCOPE": "api://1e4246b3-95be-4887-98b4-880990179bd5/user_impersonation",
+    "CLIENT_ID": "12bd03aa-a94a-41db-a448-61552c0380ee",
+    "USER_IMPERSONATIION_SCOPE": "api://38609aca-bbc8-415b-9b4c-072a229652ad/user_impersonation",
     "CHAT_API_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/orchestrators/chatbot_orchestrator/chatbot_api",
     "CHAT_API_STATUS_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/orchestrators/chatbot_orchestrator/check_status",
     "CHAT_API_HISTORY_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/orchestrators/chatbot_orchestrator/fetch_chat_history",

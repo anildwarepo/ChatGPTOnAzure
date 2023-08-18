@@ -102,10 +102,11 @@ def chatbot_api(input, documents: func.Out[func.Document]):
                     return func.HttpResponse(json.dumps({"api": "chatapi", "method": "GET", "status": "error", 
                                                          "chatHistory": None, "message": f"Max Token Limit Exceeded: {num_tokens}"}))
             else:
-                openai_response = openai_helper.call_openai(prompt)
+                openai_response = utils_helper.format_response("Prompt length exceeds 1536 tokens.", None, None)
     else:  
         #prompt = "{userQuery: userQuery, maxTokens: max_tokens, temperature: temperature, systemMessage: systemMessage}"
-        openai_response = openai_helper.call_openai(prompt)
+        llm_response = openai_helper.call_openai(prompt, useVectorCache)
+        openai_response = utils_helper.format_response(llm_response.gpt_response, None, llm_response.usage)
 
     if logging_enabled:
         log = utils_helper.createlog(prompt, openai_response)

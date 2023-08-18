@@ -139,17 +139,35 @@ def call_openai_basic(prompt):
         return response['choices'][0]['message']['content']
     except Exception as e:
         return str(e)
-    
 
-def call_openai(prompt):
-    
+
+def lookup_cache(prompt, useVectorCache):
+    distance = 'n/a'
+    if useVectorCache:
+        cached, distance, gpt_response = check_azure_cog_search_cache(prompt)
+        if cached:
+            return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)
+
+def call_openai(prompt, useVectorCache):
+    distance = 'n/a'
+    if useVectorCache:
+        cached, distance, gpt_response = check_azure_cog_search_cache(prompt)
+        if cached:
+            return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)    
+   
+       
     openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
     openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
     system_message  = prompt['gptPrompt']['systemMessage']
     
-    question = prompt['chatHistory'] + prompt['gptPrompt']['question']['content'] if prompt.get('includeChatHistory') else prompt['gptPrompt']['question']['content']
+    #question = prompt['chatHistory'] + prompt['gptPrompt']['question'] if prompt.get('includeChatHistory') else prompt['gptPrompt']['question']
+    if prompt.get('includeChatHistory'):
+        prompt['gptPrompt']['question']['content'] = prompt['chatHistory'] + prompt['gptPrompt']['question']['content']
+        question = prompt['gptPrompt']['question']
+    else:
+        question = prompt['gptPrompt']['question']
 
-
+    #new_prompt= [system_message] + [{"role: user", "content": question}]
     new_prompt= [system_message] + [question]
     max_response_tokens = int(prompt['maxTokens'])
     
@@ -162,9 +180,10 @@ def call_openai(prompt):
                     max_tokens=max_response_tokens,
                     stop=f"Answer:"                
                     )
-        return { "llm_response" : response['choices'][0]['message']['content'], "usage" : response.usage }
+        return LLM_Response(f"[FROM LLM - d={distance}]\n\n" + response['choices'][0]['message']['content'], response.usage, False, False, None)
+        #return { "llm_response" : response['choices'][0]['message']['content'], "usage" : response.usage }
     except Exception as e:
-        return { "llm_response" : e.user_message, "usage" : None } 
+        return e, None 
 
 
 

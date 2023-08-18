@@ -6,16 +6,17 @@ import os
 
 def format_response(openai_response, sources, usage):
 #def format_response(LLM_Response openai_response, sources):
-    df = pd.DataFrame(sources)
-    arr_unique_filename = df['fileName'].unique()
-    citations = ""
-    for filename in arr_unique_filename:
-        page_numbers = df.loc[df['fileName'] == filename]
-        citations += f"\n{filename}, page numbers:"
-        for page in page_numbers['pageNumber']:
-            citations += f"[{page}]\n"      
-    
-    openai_response += f"\n\n\nCitations: \n{citations}"
+    if sources:
+        df = pd.DataFrame(sources)
+        arr_unique_filename = df['fileName'].unique()
+        citations = ""
+        for filename in arr_unique_filename:
+            page_numbers = df.loc[df['fileName'] == filename]
+            citations += f"\n{filename}, page numbers:"
+            for page in page_numbers['pageNumber']:
+                citations += f"[{page}]\n"      
+        
+        openai_response += f"\n\n\nCitations: \n{citations}"
 
     #return LLM_Response(openai_response, usage)
     return { "llm_response" : openai_response, "usage" : usage }
