@@ -2,11 +2,11 @@
     "TENANT_ID": "7f1290b4-3c39-4277-a63e-c577680a12cf",
     "CLIENT_ID": "12bd03aa-a94a-41db-a448-61552c0380ee",
     "USER_IMPERSONATIION_SCOPE": "api://38609aca-bbc8-415b-9b4c-072a229652ad/user_impersonation",
-    "CHAT_API_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/orchestrators/chatbot_orchestrator/chatbot_api",
-    "CHAT_API_STATUS_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/orchestrators/chatbot_orchestrator/check_status",
-    "CHAT_API_HISTORY_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/orchestrators/chatbot_orchestrator/fetch_chat_history",
-    "FILE_UPLOAD_ENDPOINT": "https://funcchatapichatgptwestus.azurewebsites.net/api/file_upload",
-    "FILE_UPLOAD_ENDPOINT_CHECK_PROGRESS": "https://funcchatapichatgptwestus.azurewebsites.net/api/file_upload_progress/",
-    "UseAADAuth": true,
+    "CHAT_API_ENDPOINT": "http://localhost:7071/api/orchestrators/chatbot_orchestrator/chatbot_api",
+    "CHAT_API_STATUS_ENDPOINT": "http://localhost:7071/api/orchestrators/chatbot_orchestrator/check_status",
+    "CHAT_API_HISTORY_ENDPOINT": "http://localhost:7071/api/orchestrators/chatbot_orchestrator/fetch_chat_history",
+    "FILE_UPLOAD_ENDPOINT": "http://localhost:7071/api/file_upload",
+    "FILE_UPLOAD_ENDPOINT_CHECK_PROGRESS": "http://localhost:7071/api/file_upload_progress/",
+    "UseAADAuth": false,
     "email": "someone@example.com"
 }

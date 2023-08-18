@@ -57,8 +57,14 @@ def check_status(params):
       
 
 @activity_bp.activity_trigger(input_name="input")
-def fetch_chat_history(input):
-    return {"api": "chatapi", "method": "GET", "status": "success", "chatHistory": None, "message": "Chat history fetched successfully"}
+@activity_bp.cosmos_db_input(arg_name="chatHistory", 
+                      database_name="logging-db",
+                      container_name="openai-logs",
+                      create_if_not_exists=True,
+                      connection="AzureCosmosDBConnectionString")
+def fetch_chat_history(input, chatHistory: func.DocumentList):
+    chat_history_json = [doc.to_json() for doc in chatHistory]
+    return {"api": "chatapi", "method": "GET", "status": "success", "data": chat_history_json, "message": "Chat history fetched successfully"}
 
 
 

@@ -224,10 +224,10 @@ export const ChatGPTUI = (props: any) => {
             });
             return;
         }
-        response.chatHistory!.reverse().map ((doc: any) => {
+        response.chatHistory!.data!.reverse().map ((doc: any) => {
             let prompt = JSON.parse(doc);
             const userItem = {userType: "user", userMessage: prompt.prompt.question.content};
-            const botItem = {userType: "system", userMessage: prompt.llm_response};
+            const botItem = {userType: "system", userMessage: prompt.response.llm_response};
             setPrevChatHistory((prevChatHistory) => {
                 // Add the new user message to the chat history
                 const updatedHistory = [...prevChatHistory, userItem];
