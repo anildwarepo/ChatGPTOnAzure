@@ -24,7 +24,6 @@ def check_enviroment_variables():
         "AFR_API_KEY",
         "OPENAI_RESOURCE_ENDPOINT",
         "OPENAI_EMBEDDING_MODEL",
-        "OPENAI_API_KEY",
         "OPENAI_API_VERSION",
         "AZSEARCH_EP",
         "AZSEARCH_KEY",
@@ -36,7 +35,8 @@ def check_enviroment_variables():
         "CHAT_HISTORY_LOGGING_ENABLED",
         "SYSTEM_MESSAGE",
         "SYSTEM_MESSAGE_FOR_SEARCH",
-        "AzureCosmosDBConnectionString"
+        "AzureCosmosDBConnectionString__accountEndpoint",
+        "AzureCosmosDBConnectionString__credential"
     ]
 
     # Check if all required environment variables are set
@@ -48,8 +48,23 @@ def check_enviroment_variables():
 def check_status(params):
     try:
         check_enviroment_variables()
-        ll_response = openai_helper.call_openai_basic([{"role": "system", "content": "You are an enterprise search agent helping users with useful response on their questions. You need to greet users and ask for question that you can help with."},{"role": "user", "content": "Greet user and ask for question"}])
-        return {"api": "chatapi_status", "method": "GET", "status": "success", "chatHistory": None, "message": ll_response} 
+        
+        gptPrompt = {
+            
+                "systemMessage": 
+                {"role": "system", "content": "You are an enterprise search agent helping users with useful responses to their questions. You need to greet users and ask for a question that you can help with."}
+            ,
+                           "question": 
+                {"role": "user", "content": "Greet the user and ask for a question"}
+            
+        }
+
+
+
+        prompt = { "maxTokens" : "200", "temperature" : "0.5", "gptPrompt" : gptPrompt}
+
+        llm_response = openai_helper.call_openai_base(prompt)
+        return {"api": "chatapi_status", "method": "GET", "status": "success", "chatHistory": None, "message": llm_response['choices'][0]['message']['content']} 
     
     except Exception as e:
         return {"api": "chatapi_status", "method": "GET", "status": "error", "chatHistory": None, "message": str(e)}

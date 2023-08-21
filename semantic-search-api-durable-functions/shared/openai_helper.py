@@ -8,6 +8,7 @@ import numpy as np
 import uuid
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
+from azure.identity import DefaultAzureCredential
 
 from shared import arm_helper
 
@@ -20,7 +21,9 @@ endpoint = os.environ.get("AZSEARCH_EP")
 
 semantic_config = os.environ.get("SEMANTIC_CONFIG")
 
-openai.api_type = "azure"
+#openai.api_type = "azure"
+openai.api_type = 'azure_ad'
+
 openai.api_version = os.getenv("OPENAI_API_VERSION")   # SET YOUR API VERSION
 
 vector_index = faiss.IndexFlatIP(1536)
@@ -123,22 +126,10 @@ class LLM_Response:
         self.from_cache = from_cache
         self.distance = distance
 
-def call_openai_basic(prompt):
-    
-    openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
-    openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
-    
-    try:
-        response = openai.ChatCompletion.create(
-                    engine=DEPLOYMENT_NAME, 
-                    messages = prompt,
-                    temperature=0.5,
-                    max_tokens=200,
-                    stop=f"Answer:"                
-                    )
-        return response['choices'][0]['message']['content']
-    except Exception as e:
-        return str(e)
+  
+
+
+
 
 
 def lookup_cache(prompt, useVectorCache):
@@ -148,42 +139,7 @@ def lookup_cache(prompt, useVectorCache):
         if cached:
             return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)
 
-def call_openai(prompt, useVectorCache):
-    distance = 'n/a'
-    if useVectorCache:
-        cached, distance, gpt_response = check_azure_cog_search_cache(prompt)
-        if cached:
-            return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)    
-   
-       
-    openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
-    openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
-    system_message  = prompt['gptPrompt']['systemMessage']
-    
-    #question = prompt['chatHistory'] + prompt['gptPrompt']['question'] if prompt.get('includeChatHistory') else prompt['gptPrompt']['question']
-    if prompt.get('includeChatHistory'):
-        prompt['gptPrompt']['question']['content'] = prompt['chatHistory'] + prompt['gptPrompt']['question']['content']
-        question = prompt['gptPrompt']['question']
-    else:
-        question = prompt['gptPrompt']['question']
 
-    #new_prompt= [system_message] + [{"role: user", "content": question}]
-    new_prompt= [system_message] + [question]
-    max_response_tokens = int(prompt['maxTokens'])
-    
-    temperature =  prompt['temperature']
-    try:
-        response = openai.ChatCompletion.create(
-                    engine=DEPLOYMENT_NAME, 
-                    messages = new_prompt,
-                    temperature=temperature,
-                    max_tokens=max_response_tokens,
-                    stop=f"Answer:"                
-                    )
-        return LLM_Response(f"[FROM LLM - d={distance}]\n\n" + response['choices'][0]['message']['content'], response.usage, False, False, None)
-        #return { "llm_response" : response['choices'][0]['message']['content'], "usage" : response.usage }
-    except Exception as e:
-        return e, None 
 
 
 
@@ -248,42 +204,55 @@ def add_to_azure_cog_search_cache(prompt, gpt_response, distance):
     search_client.upload_documents(documents = [search_doc])
 
 
+def call_openai_base(prompt):
+       
+    openai.api_key = get_openai_key()
+    try:
+        messages = [prompt['gptPrompt']['systemMessage']] + [prompt['gptPrompt']['question']]
 
+        response = openai.ChatCompletion.create(
+                    engine=DEPLOYMENT_NAME, 
+                    messages = messages,
+                    temperature= float(prompt['temperature']),
+                    max_tokens=int(prompt['maxTokens']) ,
+                    functions=functions,
+                    function_call="auto", 
+                    stop=f"Answer:"                
+                    )
+        return response
+    except Exception as e:
+        return str(e)
+
+
+def call_openai(prompt, useVectorCache):
+    distance = 'n/a'
+    if useVectorCache:
+        cached, distance, gpt_response = check_azure_cog_search_cache(prompt)
+        if cached:
+            return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)    
+
+    if prompt.get('includeChatHistory'):
+        prompt['gptPrompt']['question']['content'] = prompt['chatHistory'] + prompt['gptPrompt']['question']['content']
+   
+    try:
+        response = call_openai_base(prompt)
+        return LLM_Response(f"[FROM LLM - d={distance}]\n\n" + response['choices'][0]['message']['content'], response.usage, False, False, None)
+    except Exception as e:
+        return e, None 
 
 def call_openai_with_search(search_prompt, prompt, useVectorCache) -> LLM_Response:
-    
-    #cached, distance, gpt_response = check_cache(prompt)
-    #if cached:
-       #return gpt_response , None , False
-    #   return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)
-
     distance = 'n/a'
     if useVectorCache:
         cached, distance, gpt_response = check_azure_cog_search_cache(prompt)
         if cached:
             return LLM_Response(f"[FROM CACHE - d={distance}]\n\n" + gpt_response, None, False, True, distance)
 
-    openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
-    openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
-
-    max_response_tokens = int(prompt['maxTokens'])    
-    temperature =  prompt['temperature']
-
-
     function_call_response = ""
     try:
         if prompt.get('includeChatHistory'):
-            search_prompt[1]['content'] = prompt['chatHistory'] + search_prompt[1]['content']
-
-        response = openai.ChatCompletion.create(
-                    engine=DEPLOYMENT_NAME, 
-                    messages = search_prompt,
-                    temperature=temperature,
-                    max_tokens=max_response_tokens,
-                    functions=functions,
-                    function_call="auto", 
-                    stop=f"Answer:"                
-                    )
+            prompt['gptPrompt']['question']['content'] = prompt['chatHistory'] + search_prompt[1]['content']
+     
+        response = call_openai_base(prompt)
         
         if 'function_call' in response['choices'][0]['message']:
             function_name = response['choices'][0]['message']['function_call']['name']
@@ -310,13 +279,19 @@ def call_openai_with_search(search_prompt, prompt, useVectorCache) -> LLM_Respon
         return e,  None 
 
 def generate_embeddings(text):
-    openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
-    openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
+    openai.api_key = get_openai_key()
     response = openai.Embedding.create(
         input=text, engine=os.getenv("OPENAI_EMBEDDING_MODEL"))
     embeddings = response['data'][0]['embedding']
     return embeddings
 
 
+def get_openai_key():
+    #openai.api_key = os.getenv("OPENAI_API_KEY")  # SET YOUR OWN API KEY HERE
+    openai.api_base = os.getenv("OPENAI_RESOURCE_ENDPOINT")  # SET YOUR RESOURCE ENDPOINT
+    default_credential = DefaultAzureCredential()
+    token = default_credential.get_token("https://cognitiveservices.azure.com/.default")
+    openai.api_type = "azure_ad"
+    return token.token
 
 

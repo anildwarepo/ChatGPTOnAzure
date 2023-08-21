@@ -33,21 +33,20 @@ FUNC_STORAGE="${values[2]//$'\r'/}"
 FUNC_NAME="${values[3]//$'\r'/}"
 AFR_ENDPOINT="${values[4]//$'\r'/}"
 AFR_API_KEY="${values[5]//$'\r'/}"
-OPENAI_RESOURCE_ENDPOINT="${values[6]//$'\r'/}"
+OPENAI_RESOURCE_NAME="${values[6]//$'\r'/}"
 OPENAI_EMBEDDING_MODEL="${values[7]//$'\r'/}"
-OPENAI_API_KEY="${values[8]//$'\r'/}"
-OPENAI_API_VERSION="${values[9]//$'\r'/}"
-AZSEARCH_EP="${values[10]//$'\r'/}"
-AZSEARCH_KEY="${values[11]//$'\r'/}"
-INDEX_NAME="${values[12]//$'\r'/}"
-VECTOR_INDEX_NAME="${values[13]//$'\r'/}"
-DEPLOYMENT_NAME="${values[14]//$'\r'/}"
-OPENAI_MODEL_NAME="${values[15]//$'\r'/}"
-SEMANTIC_CONFIG="${values[16]//$'\r'/}"
-CHAT_HISTORY_LOGGING_ENABLED="${values[17]//$'\r'/}"
-SYSTEM_MESSAGE="${values[18]//$'\r'/}"
-SYSTEM_MESSAGE_FOR_SEARCH="${values[19]//$'\r'/}"
-Azure_CosmosDB_Account="${values[20]//$'\r'/}"
+OPENAI_API_VERSION="${values[8]//$'\r'/}"
+AZSEARCH_EP="${values[9]//$'\r'/}"
+AZSEARCH_KEY="${values[10]//$'\r'/}"
+INDEX_NAME="${values[11]//$'\r'/}"
+VECTOR_INDEX_NAME="${values[12]//$'\r'/}"
+DEPLOYMENT_NAME="${values[13]//$'\r'/}"
+OPENAI_MODEL_NAME="${values[14]//$'\r'/}"
+SEMANTIC_CONFIG="${values[15]//$'\r'/}"
+CHAT_HISTORY_LOGGING_ENABLED="${values[16]//$'\r'/}"
+SYSTEM_MESSAGE="${values[17]//$'\r'/}"
+SYSTEM_MESSAGE_FOR_SEARCH="${values[18]//$'\r'/}"
+Azure_CosmosDB_Account="${values[19]//$'\r'/}"
 #AzureCosmosDBConnectionString="${values[19]}"
 
 
@@ -100,22 +99,16 @@ do
     read AFR_API_KEY
 done
 
-while [ -z "${OPENAI_RESOURCE_ENDPOINT}" ]
+while [ -z "${OPENAI_RESOURCE_NAME}" ]
 do
-    echo "Please provide OpenAI Resource Endpoint:"
-    read OPENAI_RESOURCE_ENDPOINT
+    echo "Please provide OpenAI Resource Name:"
+    read OPENAI_RESOURCE_NAME
 done
 
 while [ -z "${OPENAI_EMBEDDING_MODEL}" ]
 do
     echo "Please provide OpenAI Embedding Model:"
     read OPENAI_EMBEDDING_MODEL
-done
-
-while [ -z "${OPENAI_API_KEY}" ]
-do
-    echo "Please provide OpenAI API Key:"
-    read OPENAI_API_KEY
 done
 
 while [ -z "${OPENAI_API_VERSION}" ]
@@ -224,6 +217,13 @@ then
 fi
 
 
+OPENAI_RESOURCE_ENDPOINT=$(az cognitiveservices account list | jq -r --arg OPENAI_NAME $OPENAI_RESOURCE_NAME '.[]  | select(.name == $OPENAI_NAME) | .properties.endpoint')
+if [[ -z $OPENAI_RESOURCE_ENDPOINT ]]
+then
+    printf "\nError: OpenAI Resource Endpoint not found. Exiting...\n"
+    exit 1
+fi
+
 
 RG_EXISTS=$(az group exists -g $RESOURCE_GROUP | jq -r '.')
 
@@ -283,6 +283,7 @@ fi
 #get cosmos db connection string
 Azure_CosmosDB_ConnectionString=$(az cosmosdb keys list --name $Azure_CosmosDB_Account --resource-group $RESOURCE_GROUP --type connection-strings | jq -r .connectionStrings[0].connectionString)
 
+Azure_CosmosDB_Endpoint=$(az cosmosdb show --resource-group $RESOURCE_GROUP --name $Azure_CosmosDB_Account --query documentEndpoint)
 
 if [ $? -ne 0 ]
 then
@@ -292,7 +293,7 @@ fi
 
 #check if function app exists
 printf "\nCreating Function App $FUNC_NAME...\n"
-function_name=$(az resource list -g $RESOURCE_GROUP | jq -r --arg FUNC_NAME $FUNC_NAME '.[] | select(.type == "Microsoft.Web/sites") | select(.name = $FUNC_NAME) | .name')
+function_name=$(az resource list -g $RESOURCE_GROUP | jq -r --arg FUNC_NAME $FUNC_NAME '.[] | select(.type == "Microsoft.Web/sites") | select(.name == $FUNC_NAME) | .name')
 
 
 if [[ $function_name = $FUNC_NAME ]]
@@ -300,9 +301,15 @@ then
     printf "\nFunction App $function_name already exists.\n"
 else
     
-    az functionapp create --name $FUNC_NAME --storage-account $FUNC_STORAGE --consumption-plan-location $REGION --resource-group $RESOURCE_GROUP --os-type Linux --runtime python --runtime-version 3.9 --functions-version 4
+    az functionapp create --name $FUNC_NAME --storage-account $FUNC_STORAGE --consumption-plan-location $REGION --resource-group $RESOURCE_GROUP --os-type Linux --runtime python --runtime-version 3.10 --functions-version 4
 
 fi
+
+# Create Managed Identity on Function App
+printf "\nCreating Managed Identity on Function App $FUNC_NAME...\n"
+az functionapp identity assign --name $FUNC_NAME --resource-group $RESOURCE_GROUP
+
+
 
 
 
@@ -312,12 +319,14 @@ then
     exit 1
 fi
 
+# Configure Function App Settings
+printf "\nConfiguring Function App Settings...\n"
 az functionapp config appsettings set --name $FUNC_NAME --resource-group $RESOURCE_GROUP \
     --settings AFR_ENDPOINT=$AFR_ENDPOINT \
     AFR_API_KEY=$AFR_API_KEY \
+    AzureWebJobsFeatureFlags="EnableWorkerIndexing" \
     OPENAI_RESOURCE_ENDPOINT=$OPENAI_RESOURCE_ENDPOINT \
     OPENAI_EMBEDDING_MODEL=$OPENAI_EMBEDDING_MODEL \
-    OPENAI_API_KEY=$OPENAI_API_KEY \
     OPENAI_API_VERSION=$OPENAI_API_VERSION \
     AZSEARCH_EP=$AZSEARCH_EP \
     AZSEARCH_KEY=$AZSEARCH_KEY \
@@ -329,7 +338,8 @@ az functionapp config appsettings set --name $FUNC_NAME --resource-group $RESOUR
     CHAT_HISTORY_LOGGING_ENABLED=$CHAT_HISTORY_LOGGING_ENABLED \
     SYSTEM_MESSAGE="$SYSTEM_MESSAGE" \
     SYSTEM_MESSAGE_FOR_SEARCH="$SYSTEM_MESSAGE_FOR_SEARCH" \
-    AzureCosmosDBConnectionString=$Azure_CosmosDB_ConnectionString
+    AzureCosmosDBConnectionString__accountEndpoint=$Azure_CosmosDB_Endpoint \
+    AzureCosmosDBConnectionString__credential="managedidentity"
 
 
 
@@ -344,7 +354,7 @@ fi
 cd semantic-search-api-durable-functions
 
 while true;do
-    function_name=$(az resource list -g $RESOURCE_GROUP | jq -r --arg FUNC_NAME $FUNC_NAME '.[] | select(.type == "Microsoft.Web/sites") | select(.name = $FUNC_NAME) | .name')
+    function_name=$(az resource list -g $RESOURCE_GROUP | jq -r --arg FUNC_NAME $FUNC_NAME '.[] | select(.type == "Microsoft.Web/sites") | select(.name == $FUNC_NAME) | .name')
     if [[ $function_name = $FUNC_NAME ]]
     then
         break
@@ -357,6 +367,7 @@ done
 
 
 printf "\nDeploying Function App Code...\n"
+sleep 30
 func azure functionapp publish $FUNC_NAME --force --python
 
 if [ $? -ne 0 ]

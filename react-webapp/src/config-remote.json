@@ -1,0 +1,12 @@
+{
+    "TENANT_ID": "7f1290b4-3c39-4277-a63e-c577680a12cf",
+    "CLIENT_ID": "69f863d2-920c-433c-bfb7-6b390a57b3f6",
+    "USER_IMPERSONATIION_SCOPE": "api://f0cc8aec-ff2b-46a5-90a4-ab05740b9ef0/user_impersonation",
+    "CHAT_API_ENDPOINT": "https://funcchatapistorefunc1024.azurewebsites.net/api/orchestrators/chatbot_orchestrator/chatbot_api",
+    "CHAT_API_STATUS_ENDPOINT": "https://funcchatapistorefunc1024.azurewebsites.net/api/orchestrators/chatbot_orchestrator/check_status",
+    "CHAT_API_HISTORY_ENDPOINT": "https://funcchatapistorefunc1024.azurewebsites.net/api/orchestrators/chatbot_orchestrator/fetch_chat_history",
+    "FILE_UPLOAD_ENDPOINT": "https://funcchatapistorefunc1024.azurewebsites.net/api/file_upload",
+    "FILE_UPLOAD_ENDPOINT_CHECK_PROGRESS": "https://funcchatapistorefunc1024.azurewebsites.net/api/file_upload_progress/",
+    "UseAADAuth": true,
+    "email": "someone@example.com"
+}
