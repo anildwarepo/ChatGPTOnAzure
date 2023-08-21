@@ -50,26 +50,25 @@ def check_status(params):
         check_enviroment_variables()
         
         gptPrompt = {
-            
                 "systemMessage": 
-                {"role": "system", "content": "You are an enterprise search agent helping users with useful responses to their questions. You need to greet users and ask for a question that you can help with."}
-            ,
-                           "question": 
-                {"role": "user", "content": "Greet the user and ask for a question"}
-            
+                        {
+                            "role": "system", 
+                            "content": "You are an enterprise search agent helping users with useful responses to their questions. You need to greet users and ask for a question that you can help with."
+                        },
+                "question": 
+                    {
+                        "role": "user", 
+                        "content": "Greet the user and ask for a question"
+                    }
         }
-
-
-
         prompt = { "maxTokens" : "200", "temperature" : "0.5", "gptPrompt" : gptPrompt}
-
         llm_response = openai_helper.call_openai_base(prompt)
         return {"api": "chatapi_status", "method": "GET", "status": "success", "chatHistory": None, "message": llm_response['choices'][0]['message']['content']} 
     
     except Exception as e:
         return {"api": "chatapi_status", "method": "GET", "status": "error", "chatHistory": None, "message": str(e)}
 
-      
+
 
 @activity_bp.activity_trigger(input_name="input")
 @activity_bp.cosmos_db_input(arg_name="chatHistory", 
